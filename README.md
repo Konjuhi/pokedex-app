@@ -87,6 +87,30 @@ The app follows a layered architecture for scalability and maintainability.
   └── core.dart        # Barrel file for exporting core dependencies
   ```
 
+  ### Design Tokens
+  The app uses a **tokens-based theming system** to support easy brand switching and maintain a clean separation of design concerns.
+
+  #### Purpose
+  Design tokens abstract color and typography into structured interfaces, enabling brand flexibility (e.g., `PokemonLightTokens`, `PokemonDarkTokens`).
+
+  #### Using the Tokens System
+
+  **Step 1: Wrap your App**
+  ```dart
+  TokensProvider(
+    tokens: PokemonLightTokens(),
+    child: MyApp(),
+  )
+  ```
+
+  **Step 2: Access tokens in widgets**
+  ```dart
+  context.colors.primary;
+  context.textStyles.bodyMedium;
+  ```
+
+  This system enables brand theming without manually passing colors or styles everywhere.
+
 - **Features**  
   Feature-specific code organized by domain. Each feature contains its own layers (data, presentation) and logic.
 
