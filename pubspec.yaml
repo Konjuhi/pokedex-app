@@ -64,6 +64,7 @@ flutter:
   assets:
     - assets/common/
     - assets/animations/
+    - assets/screenshots/
 
 
 # Flutter Native Splash configuration
