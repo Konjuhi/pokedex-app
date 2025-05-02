@@ -122,3 +122,19 @@ The app follows a layered architecture for scalability and maintainability.
     - Manages Pokémon-related features like search, display, saving, and deletion
     - Uses PokéAPI for fetching data
     - Implements custom widgets (e.g., `PokemonCard`) and business logic
+
+## Video Record
+
+The app supports splash screens and custom launcher icons using `flutter_native_splash` and `flutter_launcher_icons`. It includes:
+
+- Light and dark splash screens
+- Tinted icons for dark/light modes
+
+```markdown
+![App Demo](assets/demo.gif)
+```
+
+
+
+
+  
