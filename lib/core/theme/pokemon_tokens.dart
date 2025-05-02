@@ -141,7 +141,7 @@ class PokemonLightTextStyleTokens implements TextStyleTokens {
   TextStyle get headlineMedium => GoogleFonts.notoSans(
     fontSize: 28,
     fontWeight: FontWeight.w700,
-    color: const Color(0xFF212121),
+    color:  Colors.white
   );
   
   @override
@@ -229,7 +229,7 @@ class PokemonDarkTextStyleTokens implements TextStyleTokens {
   TextStyle get headlineMedium => GoogleFonts.notoSans(
     fontSize: 28,
     fontWeight: FontWeight.w700,
-    color: const Color(0xFFEEEEEE),
+    color:  Colors.black,
   );
   
   @override

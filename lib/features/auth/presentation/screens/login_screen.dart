@@ -8,19 +8,22 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colors.background,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            _buildBackgroundAnimation(),
-            const Center(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(24),
-                child: LoginWidget(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: context.colors.background,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              _buildBackgroundAnimation(),
+              const Center(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(24),
+                  child: LoginWidget(),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

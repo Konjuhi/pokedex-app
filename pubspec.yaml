@@ -54,14 +54,43 @@ dev_dependencies:
   # Testing
   mockito: ^5.4.4
   network_image_mock: ^2.1.1
+  flutter_launcher_icons: 0.14.3
+  flutter_native_splash: ^2.4.4
 
 flutter:
 
   uses-material-design: true
 
   assets:
-    - assets/images/
+    - assets/common/
     - assets/animations/
+
+
+# Flutter Native Splash configuration
+flutter_native_splash:
+  color: "#ffffff"
+  color_android: "#ffffff"
+  color_dark_android: "#121212"
+  color_ios: "#ffffff"
+  color_dark_ios: "#121212"
+  color_web: "#ffffff"
+  color_dark_web: "#121212"
+  image: "assets/common/app-icon.png"
+
+# Flutter Launcher Icons configuration
+flutter_launcher_icons:
+  ios: true
+  android: false
+  image_path_ios: "assets/common/app-icon.png"
+  image_path_ios_dark_transparent: "assets/common/app-icon.png"
+ # image_path_android: "assets/android/app-icon-android.png"
+  #adaptive_icon_background: "assets/android/app-icon-background.png"
+ # adaptive_icon_foreground: "assets/android/app-icon-foreground.png"
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/common/app-icon.png"
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

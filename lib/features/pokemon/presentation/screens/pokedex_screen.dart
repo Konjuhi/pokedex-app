@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pokedex_app/core/common_widgets/async_value_widget.dart';
+import 'package:pokedex_app/core/common_widgets/theme_menu.dart';
 import 'package:pokedex_app/core/extensions/extensions.dart';
 import 'package:pokedex_app/core/localization/string_hardcoded.dart';
 import 'package:pokedex_app/core/theme/theme.dart';
@@ -30,143 +31,21 @@ class PokedexScreen extends ConsumerWidget {
     final currentThemeMode = themeController.currentThemeMode;
 
     void showThemeMenu() {
-      final RenderBox button = context.findRenderObject() as RenderBox;
-      final RenderBox overlay = Navigator.of(context).overlay!.context.findRenderObject() as RenderBox;
-      final RelativeRect position = RelativeRect.fromRect(
-        Rect.fromPoints(
-          button.localToGlobal(Offset.zero, ancestor: overlay),
-          button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
-        ),
-        Offset.zero & overlay.size,
-      );
-      
-      showMenu<AppThemeMode>(
-        context: context,
-        position: position,
-        items: [
-          PopupMenuItem<AppThemeMode>(
-            value: AppThemeMode.light,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.light_mode,
-                  color: currentThemeMode == AppThemeMode.light 
-                      ? context.colors.primary 
-                      : context.colors.textSecondary,
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  'Light Theme'.hardcoded,
-                  style: TextStyle(
-                    color: currentThemeMode == AppThemeMode.light 
-                        ? context.colors.primary 
-                        : context.colors.textPrimary,
-                    fontWeight: currentThemeMode == AppThemeMode.light 
-                        ? FontWeight.bold 
-                        : FontWeight.normal,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          PopupMenuItem<AppThemeMode>(
-            value: AppThemeMode.dark,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.dark_mode,
-                  color: currentThemeMode == AppThemeMode.dark 
-                      ? context.colors.primary 
-                      : context.colors.textSecondary,
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  'Dark Theme'.hardcoded,
-                  style: TextStyle(
-                    color: currentThemeMode == AppThemeMode.dark 
-                        ? context.colors.primary 
-                        : context.colors.textPrimary,
-                    fontWeight: currentThemeMode == AppThemeMode.dark 
-                        ? FontWeight.bold 
-                        : FontWeight.normal,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          PopupMenuItem<AppThemeMode>(
-            value: AppThemeMode.system,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.settings_suggest,
-                  color: currentThemeMode == AppThemeMode.system 
-                      ? context.colors.primary 
-                      : context.colors.textSecondary,
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  'System Theme'.hardcoded,
-                  style: TextStyle(
-                    color: currentThemeMode == AppThemeMode.system 
-                        ? context.colors.primary 
-                        : context.colors.textPrimary,
-                    fontWeight: currentThemeMode == AppThemeMode.system 
-                        ? FontWeight.bold 
-                        : FontWeight.normal,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ).then((value) {
-        if (value != null) {
-          themeController.setThemeMode(value);
-        }
-      });
+      ThemeMenu.show(context, ref);
     }
 
     Future<void> confirmLogout() async {
-      final result = await showDialog<bool>(
-        context: context,
-        builder:
-            (c) => AlertDialog(
-              backgroundColor: c.colors.surface,
-              title: Text('Logout'.hardcoded, style: c.textStyles.headlineSmall),
-              content: Text(
-                'Are you sure you want to log out?'.hardcoded,
-                style: c.textStyles.bodyMedium,
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(c).pop(false),
-                  child: Text(
-                    'Cancel'.hardcoded,
-                    style: TextStyle(color: c.colors.textSecondary),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(c).pop(true),
-                  child: Text(
-                    'Yes, log out'.hardcoded,
-                    style: TextStyle(color: c.colors.primary),
-                  ),
-                ),
-              ],
-            ),
+      final result = await context.showAnimatedConfirmDialog(
+        title: 'Logout'.hardcoded,
+        content: 'Are you sure you want to log out?'.hardcoded,
+        confirmText: 'Yes, log out'.hardcoded,
       );
+
       if (result == true) {
         final ok = await ref.read(authControllerProvider.notifier).logout();
         if (!ok && context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Failed to logout. Please try again.'.hardcoded,
-                style: TextStyle(color: context.colors.textLight),
-              ),
-              backgroundColor: context.colors.error,
-            ),
+          context.showErrorSnackbar(
+            'Failed to logout. Please try again.'.hardcoded,
           );
         }
       }
@@ -175,23 +54,28 @@ class PokedexScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: context.colors.background,
       appBar: AppBar(
-        title: Text('My Pokédex'.hardcoded, style: context.textStyles.headlineMedium.copyWith(
-          color: context.colors.textLight,
-        )),
+        title: Text(
+          'My Pokédex'.hardcoded,
+          style: context.textStyles.headlineMedium.copyWith(
+            // color: context.colors.textLight,
+          ),
+        ),
         actions: [
           IconButton(
             icon: Icon(
-              currentThemeMode == AppThemeMode.system 
+              currentThemeMode == AppThemeMode.system
                   ? Icons.brightness_auto
-                  : isDarkMode ? Icons.light_mode : Icons.dark_mode,
-              color: context.colors.textLight
+                  : isDarkMode
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+              color: context.colors.background,
             ),
             tooltip: 'Theme settings'.hardcoded,
             onPressed: showThemeMenu,
           ),
           IconButton(
-            icon: Icon(Icons.logout, color: context.colors.textLight), 
-            onPressed: confirmLogout
+            icon: Icon(Icons.logout, color: context.colors.background),
+            onPressed: confirmLogout,
           ),
         ],
       ),
@@ -238,12 +122,14 @@ class PokedexScreen extends ConsumerWidget {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                '${p.name} removed from your Pokédex',
-                                style: TextStyle(color: context.colors.textLight),
+                                '${p.name} removed from your Pokédex'.hardcoded,
+                                style: TextStyle(
+                                  color: context.colors.textLight,
+                                ),
                               ),
                               backgroundColor: context.colors.error,
                               action: SnackBarAction(
-                                label: 'Undo',
+                                label: 'Undo'.hardcoded,
                                 onPressed: () => controller.addPokemon(p),
                                 textColor: context.colors.textLight,
                               ),
