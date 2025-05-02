@@ -131,7 +131,7 @@ The app supports splash screens and custom launcher icons using `flutter_native_
 - Tinted icons for dark/light modes
 
 ```markdown
-![App Demo](assets/demo.gif)
+![Image](https://github.com/user-attachments/assets/baaec570-c459-4513-a38a-01488e3edc2f)
 ```
 
 
