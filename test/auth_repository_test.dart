@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sembast/sembast_memory.dart';
 
 import 'package:pokedex_app/core/database/database_service.dart';
-import 'package:pokedex_app/features/auth/data/auth_repository.dart';
+import 'package:pokedex_app/features/auth/data/repositories/auth_repository.dart';
 
 
 class InMemoryDatabaseService implements DatabaseService {

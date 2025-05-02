@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pokedex_app/core/theme/tokens_provider.dart';
+import 'package:pokedex_app/features/auth/domain/auth_controller.dart';
+import 'package:pokedex_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:pokedex_app/features/pokemon/presentation/screens/pokedex_screen.dart';
+import 'package:pokedex_app/features/pokemon/presentation/screens/search_screen.dart';
+import 'package:pokedex_app/features/pokemon/presentation/screens/splash_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../features/auth/domain/auth_controller.dart';
-import '../../features/auth/presentation/screens/login_screen.dart';
-import '../../features/pokemon/presentation/screens/pokedex_screen.dart';
-import '../../features/pokemon/presentation/screens/search_screen.dart';
-import '../../features/pokemon/presentation/screens/splash_screen.dart';
+
 
 part 'app_router.g.dart';
 
@@ -91,19 +93,28 @@ class ScaffoldWithNavBar extends StatelessWidget {
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.shifting,
+        selectedItemColor: context.colors.primary,
+        unselectedItemColor: context.colors.textSecondary,
+        showUnselectedLabels: true,
+        selectedLabelStyle: context.textStyles.labelLarge,
+        unselectedLabelStyle: context.textStyles.labelLarge,
         currentIndex: navigationShell.currentIndex,
-        onTap: (index) => navigationShell.goBranch(index),
-        items: const [
+        onTap: (i) => navigationShell.goBranch(i),
+        items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
+            backgroundColor: context.colors.surface,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.catching_pokemon),
             label: 'Pokédex',
+            backgroundColor: context.colors.surface,
           ),
         ],
       ),
+
     );
   }
 } 

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'app_bootstrap.dart';
-import 'core/api/fake_pokemon_failing_api.dart';
 import 'core/extensions/app_api_extension.dart';
-import 'core/api/pokemon_api.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +14,7 @@ void main() async {
   // assert(() {
   //   overrides.add(pokemonApiProvider.overrideWithValue(FailingPokemonApi()));
   //   return true;
-  // }());
+  // }());b
 
   final container = await appBootstrap.createApiProviderContainer(
     overrides: overrides,

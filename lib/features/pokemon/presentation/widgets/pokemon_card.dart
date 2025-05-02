@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/models/pokemon.dart';
+import 'package:pokedex_app/core/core.dart';
+import 'package:pokedex_app/features/pokemon/data/models/pokemon.dart';
 
 class PokemonCard extends StatelessWidget {
   final Pokemon pokemon;
@@ -33,6 +33,8 @@ class PokemonCard extends StatelessWidget {
 
     return Card(
       elevation: 1,
+      color: context.colors.cardBackground,
+      shadowColor: context.colors.cardShadow,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -47,17 +49,25 @@ class PokemonCard extends StatelessWidget {
                         ? CachedNetworkImage(
                           imageUrl: pokemon.image,
                           placeholder:
-                              (context, url) => const Center(
-                                child: CircularProgressIndicator(),
+                              (context, url) => Center(
+                                child: CircularProgressIndicator(
+                                  color: context.colors.primary,
+                                ),
                               ),
                           errorWidget:
-                              (context, url, error) =>
-                                  const Icon(Icons.catching_pokemon, size: 60),
+                              (context, url, error) => Icon(
+                                Icons.catching_pokemon,
+                                size: 60,
+                                color: context.colors.primary,
+                              ),
                           fit: BoxFit.contain,
                         )
-                        : const Icon(Icons.catching_pokemon, size: 60),
+                        : Icon(
+                          Icons.catching_pokemon,
+                          size: 60,
+                          color: context.colors.primary,
+                        ),
               ),
-              // Pokemon details
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -66,16 +76,13 @@ class PokemonCard extends StatelessWidget {
                     children: [
                       Text(
                         pokemon.name.toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: context.textStyles.headlineSmall,
                       ),
                       gapW8,
                       Text(
                         pokemon.generation,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
+                        style: context.textStyles.labelLarge.copyWith(
+                          color: context.colors.primary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -86,24 +93,27 @@ class PokemonCard extends StatelessWidget {
                           if (showAddButton && onAddToPokedex != null)
                             ElevatedButton.icon(
                               onPressed: onAddToPokedex,
-                              icon: const Icon(Icons.add, color: Colors.white),
+                              icon: Icon(
+                                Icons.add,
+                                color: context.colors.textLight,
+                              ),
                               label: const Text('Add'),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.lightGreen,
-                                foregroundColor: Colors.white,
+                                backgroundColor: context.colors.success,
+                                foregroundColor: context.colors.textLight,
                               ),
                             ),
                           if (!showAddButton && onRemoveFromPokedex != null)
                             ElevatedButton.icon(
                               onPressed: onRemoveFromPokedex,
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.delete,
-                                color: Colors.white,
+                                color: context.colors.textLight,
                               ),
                               label: const Text('Remove'),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                foregroundColor: Colors.white,
+                                backgroundColor: context.colors.error,
+                                foregroundColor: context.colors.textLight,
                               ),
                             ),
                         ],
@@ -119,14 +129,16 @@ class PokemonCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Description:',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: context.textStyles.labelLarge.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 gapW8,
                 Text(
                   englishEffectEntry.effect,
-                  style: const TextStyle(fontSize: 14),
+                  style: context.textStyles.bodyMedium,
                 ),
               ],
             ),

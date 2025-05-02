@@ -2,9 +2,11 @@ import 'dart:io';
 import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pokedex_app/core/exceptions/app_exception.dart';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../exceptions/app_exception.dart';
-import '../models/pokemon.dart';
+
+import '../../features/pokemon/data/models/pokemon.dart';
 
 part 'pokemon_api.g.dart';
 

@@ -1,7 +1,7 @@
 import 'package:pokedex_app/core/api/pokemon_api.dart';
+import 'package:pokedex_app/core/exceptions/app_exception.dart';
+import 'package:pokedex_app/features/pokemon/data/models/pokemon.dart';
 
-import '../exceptions/app_exception.dart';
-import '../models/pokemon.dart';
 
 class FailingPokemonApi extends PokemonApi {
   @override

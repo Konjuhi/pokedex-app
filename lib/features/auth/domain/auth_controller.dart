@@ -1,6 +1,7 @@
+import 'package:pokedex_app/features/auth/data/models/user.dart';
+import 'package:pokedex_app/features/auth/data/repositories/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../core/models/user.dart';
-import '../data/auth_repository.dart';
+
 
 part 'auth_controller.g.dart';
 

@@ -14,6 +14,7 @@ class DatabaseService {
   static const String usersStore = 'users';
   static const String pokemonStore = 'pokemon';
   static const String searchCacheStore = 'search_cache';
+  static const String settingsStore = 'settings';
 
   Database? _database;
 

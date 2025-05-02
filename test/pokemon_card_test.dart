@@ -1,140 +1,104 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pokedex_app/core/models/pokemon.dart';
+import 'package:network_image_mock/network_image_mock.dart';
+import 'package:pokedex_app/core/theme/tokens_provider.dart';
+import 'package:pokedex_app/core/theme/pokemon_tokens.dart';
+import 'package:pokedex_app/features/pokemon/data/models/pokemon.dart';
 import 'package:pokedex_app/features/pokemon/presentation/widgets/pokemon_card.dart';
-
-class MockNetworkImage extends StatelessWidget {
-  final String imageUrl;
-  final Widget Function(BuildContext, String) placeholder;
-  final Widget Function(BuildContext, String, dynamic) errorWidget;
-  final BoxFit? fit;
-
-  const MockNetworkImage({
-    super.key,
-    required this.imageUrl,
-    required this.placeholder,
-    required this.errorWidget,
-    this.fit,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return placeholder(context, imageUrl);
-  }
-}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  Widget createTestableWidget(Widget child) {
-    return MaterialApp(home: Scaffold(body: child));
+  Widget wrapWithTokens(Widget child) {
+    return MaterialApp(
+      home: TokensProvider(
+        tokens: PokemonLightTokens(),
+        child: Scaffold(body: child),
+      ),
+    );
   }
+
+  const testEffect = EffectEntry(
+    effect: 'Powers up Fire-type moves when HP is low.',
+    language: 'en',
+  );
 
   final testPokemon = Pokemon(
     id: '1',
     name: 'blaze',
     image: 'https://example.com/blaze.png',
     generation: 'Generation 1',
-    effectEntries: [
-      const EffectEntry(
-        effect: 'Powers up Fire-type moves when HP is low.',
-        language: 'en',
-      ),
-    ],
+    effectEntries: [testEffect],
   );
 
-  testWidgets(
-    'PokemonCard displays Remove button when showAddButton is false',
-    (WidgetTester tester) async {
-      await tester.pumpWidget(
-        createTestableWidget(
-          PokemonCard(
-            pokemon: testPokemon,
-            showAddButton: false,
-            onRemoveFromPokedex: () {},
+  group('PokemonCard widget', () {
+    testWidgets('shows Remove button when showAddButton is false', (tester) async {
+      await mockNetworkImagesFor(() async {
+        await tester.pumpWidget(
+          wrapWithTokens(
+            PokemonCard(
+              pokemon: testPokemon,
+              showAddButton: false,
+              onRemoveFromPokedex: () {},
+            ),
           ),
+        );
+        await tester.pump();
+        expect(find.text('Remove'), findsOneWidget);
+      });
+    });
+
+    testWidgets('calls onAddToPokedex when Add tapped', (tester) async {
+      var tapped = false;
+      await mockNetworkImagesFor(() async {
+        await tester.pumpWidget(
+          wrapWithTokens(
+            PokemonCard(
+              pokemon: testPokemon,
+              showAddButton: true,
+              onAddToPokedex: () => tapped = true,
+            ),
+          ),
+        );
+        await tester.pump();
+        await tester.tap(find.text('Add'));
+        expect(tapped, isTrue);
+      });
+    });
+
+    testWidgets('displays placeholder icon when image is empty', (tester) async {
+      final noImage = testPokemon.copyWith(image: '');
+      await tester.pumpWidget(
+        wrapWithTokens(
+          PokemonCard(pokemon: noImage, showAddButton: true),
         ),
       );
+      await tester.pump();
+      expect(find.byIcon(Icons.catching_pokemon), findsOneWidget);
+    });
 
-      expect(find.text('Remove'), findsOneWidget);
-    },
-  );
+    testWidgets('fallback description when no entries', (tester) async {
+      final noDesc = testPokemon.copyWith(effectEntries: []);
+      await mockNetworkImagesFor(() async {
+        await tester.pumpWidget(
+          wrapWithTokens(PokemonCard(pokemon: noDesc, showAddButton: true)),
+        );
+        await tester.pump();
+        expect(find.text('No description available'), findsOneWidget);
+      });
+    });
 
-  testWidgets('PokemonCard calls onAddToPokedex when Add button is tapped', (
-    WidgetTester tester,
-  ) async {
-    bool addButtonTapped = false;
-
-    await tester.pumpWidget(
-      createTestableWidget(
-        PokemonCard(
-          pokemon: testPokemon,
-          showAddButton: true,
-          onAddToPokedex: () {
-            addButtonTapped = true;
-          },
-        ),
-      ),
-    );
-
-    await tester.tap(find.text('Add'));
-    await tester.pump();
-
-    expect(addButtonTapped, true);
-  });
-
-  testWidgets('PokemonCard shows placeholder when image is empty', (
-    WidgetTester tester,
-  ) async {
-    final pokemonWithoutImage = testPokemon.copyWith(image: '');
-
-    await tester.pumpWidget(
-      createTestableWidget(
-        PokemonCard(pokemon: pokemonWithoutImage, showAddButton: true),
-      ),
-    );
-
-    expect(find.byIcon(Icons.catching_pokemon), findsOneWidget);
-  });
-
-  testWidgets('PokemonCard handles fallback for missing effect entries', (
-    WidgetTester tester,
-  ) async {
-    final pokemonWithoutDescriptions = testPokemon.copyWith(effectEntries: []);
-
-    await tester.pumpWidget(
-      createTestableWidget(
-        PokemonCard(pokemon: pokemonWithoutDescriptions, showAddButton: true),
-      ),
-    );
-
-    expect(find.text('No description available'), findsOneWidget);
-  });
-
-  testWidgets('PokemonCard handles non-English effect entries', (
-    WidgetTester tester,
-  ) async {
-    final pokemonWithNonEnglishDescription = testPokemon.copyWith(
-      effectEntries: [
-        const EffectEntry(
-          effect: 'Aumenta los movimientos tipo fuego cuando la salud es baja.',
-          language: 'es',
-        ),
-      ],
-    );
-
-    await tester.pumpWidget(
-      createTestableWidget(
-        PokemonCard(
-          pokemon: pokemonWithNonEnglishDescription,
-          showAddButton: true,
-        ),
-      ),
-    );
-
-    expect(
-      find.text('Aumenta los movimientos tipo fuego cuando la salud es baja.'),
-      findsOneWidget,
-    );
+    testWidgets('shows non-English effect if English missing', (tester) async {
+      final es = testPokemon.copyWith(
+        effectEntries: [const EffectEntry(effect: 'Descripción en español.', language: 'es')],
+      );
+      await mockNetworkImagesFor(() async {
+        await tester.pumpWidget(
+          wrapWithTokens(PokemonCard(pokemon: es, showAddButton: true)),
+        );
+        await tester.pump();
+        expect(find.text('Descripción en español.'), findsOneWidget);
+      });
+    });
   });
 }

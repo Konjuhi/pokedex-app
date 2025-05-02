@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../../../core/constants/app_sizes.dart';
-import '../../domain/auth_controller.dart';
+import 'package:lottie/lottie.dart';
+import 'package:pokedex_app/core/constants/app_sizes.dart';
+import 'package:pokedex_app/core/localization/string_hardcoded.dart';
+import 'package:pokedex_app/core/theme/tokens_provider.dart';
+import 'package:pokedex_app/features/auth/domain/auth_controller.dart';
 
 class LoginWidget extends HookConsumerWidget {
   const LoginWidget({super.key});
@@ -15,9 +17,6 @@ class LoginWidget extends HookConsumerWidget {
     final isLoading = useState(false);
     final errorMessage = useState<String?>(null);
 
-    final iconController = useAnimationController(
-      duration: const Duration(milliseconds: 1200),
-    );
     final titleController = useAnimationController(
       duration: const Duration(milliseconds: 800),
     );
@@ -29,7 +28,6 @@ class LoginWidget extends HookConsumerWidget {
     );
 
     useEffect(() {
-      iconController.forward();
       Future.delayed(
         const Duration(milliseconds: 300),
         () => titleController.forward(),
@@ -45,12 +43,6 @@ class LoginWidget extends HookConsumerWidget {
       return null;
     }, []);
 
-    final iconScale = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: iconController, curve: Curves.elasticOut),
-    );
-    final iconRotation = Tween<double>(begin: 0.5, end: 0.0).animate(
-      CurvedAnimation(parent: iconController, curve: Curves.elasticOut),
-    );
     final titleOpacity = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -78,7 +70,7 @@ class LoginWidget extends HookConsumerWidget {
 
     Future<void> login() async {
       if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
-        errorMessage.value = 'Username and password cannot be empty';
+        errorMessage.value = 'Username and password cannot be empty'.hardcoded;
         return;
       }
 
@@ -90,27 +82,15 @@ class LoginWidget extends HookConsumerWidget {
           .login(usernameController.text, passwordController.text);
 
       isLoading.value = false;
-      if (!success) errorMessage.value = 'Invalid username or password';
+      if (!success) {
+        errorMessage.value = 'Invalid username or password'.hardcoded;
+      }
     }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AnimatedBuilder(
-          animation: iconController,
-          builder:
-              (_, __) => Transform.scale(
-                scale: iconScale.value,
-                child: Transform.rotate(
-                  angle: iconRotation.value,
-                  child: const Icon(
-                    Icons.catching_pokemon,
-                    size: 80,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-        ),
+        _buildLogoAnimation(context),
         gapW48,
         AnimatedBuilder(
           animation: titleController,
@@ -119,9 +99,9 @@ class LoginWidget extends HookConsumerWidget {
                 opacity: titleOpacity.value,
                 child: Transform.translate(
                   offset: Offset(0, titleOffset.value),
-                  child: const Text(
-                    'Pokédex Login',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  child: Text(
+                    'Pokédex Login'.hardcoded,
+                    style: context.textStyles.headlineMedium,
                   ),
                 ),
               ),
@@ -139,20 +119,26 @@ class LoginWidget extends HookConsumerWidget {
                       gapH16,
                       TextField(
                         controller: usernameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          prefixIcon: Icon(Icons.person),
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: 'Username'.hardcoded,
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: context.colors.secondary,
+                          ),
+                          border: const OutlineInputBorder(),
                         ),
                       ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: passwordController,
                         obscureText: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: Icon(Icons.lock),
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: 'Password'.hardcoded,
+                          prefixIcon: Icon(
+                            Icons.lock,
+                            color: context.colors.secondary,
+                          ),
+                          border: const OutlineInputBorder(),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -161,7 +147,7 @@ class LoginWidget extends HookConsumerWidget {
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Text(
                             errorMessage.value!,
-                            style: const TextStyle(color: Colors.red),
+                            style: TextStyle(color: context.colors.error),
                           ),
                         ),
                     ],
@@ -182,12 +168,16 @@ class LoginWidget extends HookConsumerWidget {
                     child: ElevatedButton(
                       onPressed: isLoading.value ? null : login,
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: context.colors.primary,
+                        foregroundColor: context.colors.textLight,
                         padding: const EdgeInsets.all(16),
                       ),
                       child:
                           isLoading.value
-                              ? const CircularProgressIndicator()
-                              : const Text('Login'),
+                              ? CircularProgressIndicator(
+                                color: context.colors.textLight,
+                              )
+                              : Text('Login'.hardcoded),
                     ),
                   ),
                 ),
@@ -199,13 +189,48 @@ class LoginWidget extends HookConsumerWidget {
           builder:
               (_, __) => Opacity(
                 opacity: buttonOpacity.value,
-                child: const Text(
-                  'Default login: user / password',
-                  style: TextStyle(color: Colors.grey),
+                child: Text(
+                  'Default login: user / password'.hardcoded,
+                  style: TextStyle(color: context.colors.textSecondary),
                 ),
               ),
         ),
       ],
+    );
+  }
+
+  Widget _buildLogoAnimation(BuildContext context) {
+    try {
+      return Lottie.asset(
+        'assets/animations/pokemon_login.json',
+        width: 150,
+        height: 150,
+        repeat: true,
+        animate: true,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildFallbackAnimation(context);
+        },
+      );
+    } catch (e) {
+      return _buildFallbackAnimation(context);
+    }
+  }
+
+  Widget _buildFallbackAnimation(BuildContext context) {
+    return Container(
+      width: 120,
+      height: 120,
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: Icon(
+          Icons.catching_pokemon,
+          size: 80,
+          color: context.colors.primary,
+        ),
+      ),
     );
   }
 }

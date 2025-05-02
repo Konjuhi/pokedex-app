@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pokedex_app/core/api/pokemon_api.dart';
+import 'package:pokedex_app/core/database/database_service.dart';
+import 'package:pokedex_app/core/exceptions/app_exception.dart';
+import 'package:pokedex_app/features/pokemon/data/models/pokemon.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sembast/sembast.dart';
-import '../../../core/api/pokemon_api.dart';
-import '../../../core/database/database_service.dart';
-import '../../../core/models/pokemon.dart';
-import '../../../core/exceptions/app_exception.dart';
 
 part 'pokemon_repository.g.dart';
 

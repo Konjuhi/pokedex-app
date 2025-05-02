@@ -35,6 +35,9 @@ dependencies:
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
   uuid: ^4.3.3
+  google_fonts: ^6.2.1
+
+  lottie: ^2.6.0
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +61,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/animations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -1,8 +1,7 @@
+import 'package:pokedex_app/core/api/pokemon_api.dart';
+import 'package:pokedex_app/features/pokemon/data/models/pokemon.dart';
+import 'package:pokedex_app/features/pokemon/data/repositories/pokemon_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../core/api/pokemon_api.dart';
-import '../../../core/models/pokemon.dart';
-import '../data/pokemon_repository.dart';
-
 part 'pokemon_controller.g.dart';
 
 @riverpod

@@ -1,10 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pokedex_app/core/core.dart';
+import 'package:pokedex_app/features/auth/data/models/user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sembast/sembast.dart';
 import 'package:uuid/uuid.dart';
-import '../../../core/database/database_service.dart';
-import '../../../core/models/user.dart';
-import '../../../core/exceptions/app_exception.dart';
 
 part 'auth_repository.g.dart';
 
@@ -40,7 +39,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final finder = Finder(filter: Filter.equals('username', username));
       final existing = await _store.findFirst(db, finder: finder);
       if (existing != null) {
-        throw AuthException('User already exists');
+        throw AuthException('User already exists'.hardcoded);
       }
       final user = User(
         id: const Uuid().v4(),
