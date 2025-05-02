@@ -67,9 +67,34 @@ flutter test
 
 ## Architecture
 
-The app follows a layered architecture:
+The app follows a layered architecture for scalability and maintainability.
 
-- **Core**: Base components, utilities, and shared widgets
-- **Features**: Feature-specific code organized by domain
-  - **Auth**: Authentication related code
-  - **Pokemon**: Pokemon-related features with data, domain, and presentation layers
+- **Core**  
+  The `core/` directory provides shared logic, utilities, and foundational services that are used across multiple features. It's designed to be stable and independent of feature-specific code.
+
+  ```
+  lib/core/
+  ├── api/             # Base API services, Dio client setup, interceptors
+  ├── common_widgets/  # Reusable UI widgets (buttons, loaders, cards, etc.)
+  ├── constants/       # App-wide constants like spacing, breakpoints, durations
+  ├── database/        # Sembast local database setup and helper classes
+  ├── exceptions/      # Global exception handling (e.g., AppException, Failure)
+  ├── extensions/      # Dart/Flutter extensions (e.g., on BuildContext, AsyncValue)
+  ├── localization/    # Localization support (if needed)
+  ├── router/          # App-wide routing using GoRouter with guards and keys
+  ├── settings/        # App settings and user preferences (e.g., theme settings)
+  ├── theme/           # Tokens-based theming (light/dark mode, colors, text styles)
+  └── core.dart        # Barrel file for exporting core dependencies
+  ```
+
+- **Features**  
+  Feature-specific code organized by domain. Each feature contains its own layers (data, presentation) and logic.
+
+  - **Auth**:
+    - Handles user login, logout, and authentication state
+    - Includes screens, controllers (e.g., `authController`), and local persistence for credentials
+
+  - **Pokemon**:
+    - Manages Pokémon-related features like search, display, saving, and deletion
+    - Uses PokéAPI for fetching data
+    - Implements custom widgets (e.g., `PokemonCard`) and business logic
