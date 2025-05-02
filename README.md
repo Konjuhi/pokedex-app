@@ -131,13 +131,14 @@ The app supports splash screens and custom launcher icons using `flutter_native_
 - Tinted icons for dark/light modes
 
 ```markdown
-![Image](https://github.com/user-attachments/assets/6679c75b-61de-4dcd-9282-70f372b98500)
-![Image](https://github.com/user-attachments/assets/c8e2a209-548a-4323-b7ee-30e23c36ebae)
-![Image](https://github.com/user-attachments/assets/f429887c-1549-4a48-847f-ef75ac06aaea)
-![Image](https://github.com/user-attachments/assets/8eee4b39-8138-4eb0-bdbc-286481f7e816)
-![Image](https://github.com/user-attachments/assets/7635d8f4-0567-4f65-9d92-893548c013c9)
-![Image](https://github.com/user-attachments/assets/38b99d74-8a96-44ab-8d8e-cd904980a8b2)
-![Image](https://github.com/user-attachments/assets/9aaba040-ba45-4597-8fa9-e458b1252ab4)
+<img src="assets/screenshots/IMG_8408.PNG" alt="" width="400"/>
+<img src="assets/screenshots/IMG_8411.PNG" alt="" width="400"/>
+<img src="assets/screenshots/IMG_8412.PNG" alt="" width="400"/>
+<img src="assets/screenshots/IMG_8413.PNG" alt="" width="400"/>
+<img src="assets/screenshots/IMG_8414.PNG" alt="" width="400"/>
+<img src="assets/screenshots/IMG_8415.PNG" alt="" width="400"/>
+<img src="assets/screenshots/IMG_8416.PNG" alt="" width="400"/>
+
 ```
 
 
