@@ -5,13 +5,13 @@ import 'tokens.dart';
 /// Light theme color tokens for Pokemon app
 class PokemonLightColorTokens implements ColorTokens {
   @override
-  Color get primary => const Color(0xFFE3350D); // Pokemon Red
+  Color get primary => const Color(0xFFE3350D);
   
   @override
-  Color get secondary => const Color(0xFF3B5BA7); // Pokemon Blue
+  Color get secondary => const Color(0xFF3B5BA7);
   
   @override
-  Color get accent => const Color(0xFFFFCB05); // Pokemon Yellow
+  Color get accent => const Color(0xFFFFCB05);
   
   @override
   Color get background => const Color(0xFFF5F5F5);
@@ -48,7 +48,7 @@ class PokemonLightColorTokens implements ColorTokens {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [
-      primary.withOpacity(0.8),
+      primary.withValues(),
       primary,
     ],
   );
@@ -57,13 +57,13 @@ class PokemonLightColorTokens implements ColorTokens {
 /// Dark theme color tokens for Pokemon app
 class PokemonDarkColorTokens implements ColorTokens {
   @override
-  Color get primary => const Color(0xFFFF6C5C); // Pokemon Red (lighter)
+  Color get primary => const Color(0xFFFF6C5C);
   
   @override
-  Color get secondary => const Color(0xFF738CC3); // Pokemon Blue (lighter)
+  Color get secondary => const Color(0xFF738CC3);
   
   @override
-  Color get accent => const Color(0xFFFDD74C); // Pokemon Yellow (lighter)
+  Color get accent => const Color(0xFFFDD74C);
   
   @override
   Color get background => const Color(0xFF121212);
